@@ -4,7 +4,7 @@
 #include "XVideoThread.h"
 VideoWidget::VideoWidget(QWidget *p) :QOpenGLWidget(p)
 {
-	XFFmpeg::Get()->Open("my.mp4");
+	//XFFmpeg::Get()->Open("my.mp4");
 	startTimer(20);
 	XVideoThread::Get()->start();	//	Æô¶¯Ïß³Ì
 }

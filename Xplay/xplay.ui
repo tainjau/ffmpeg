@@ -31,7 +31,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>540</y>
+     <y>510</y>
      <width>41</width>
      <height>51</height>
     </rect>
@@ -68,10 +68,33 @@ QPushButton:hover{border-image: url(:/Xplay/play_hot.png);}</string>
    <class>VideoWidget</class>
    <extends>QOpenGLWidget</extends>
    <header>videowidget.h</header>
+   <slots>
+    <slot>open()</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources>
   <include location="xplay.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>XplayClass</receiver>
+   <slot>open()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>33</x>
+     <y>519</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>894</x>
+     <y>296</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>open()</slot>
+ </slots>
 </ui>

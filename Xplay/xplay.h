@@ -11,6 +11,8 @@ class Xplay : public QWidget
 public:
 	Xplay(QWidget *parent = 0);
 	~Xplay();
+public slots:
+	void open();	//当界面上按钮按下之后，就会执行事先绑定的open函数
 
 private:
 	Ui::XplayClass ui;
