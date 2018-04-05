@@ -10,7 +10,7 @@ static double r2d(AVRational r)
 	return r.num == 0 || r.den == 0 ? 0. : (double)r.num / (double)r.den;
 }
 
-bool XFFmpeg::Open(const char *path)
+int XFFmpeg::Open(const char *path)
 {
 	int re = 0;
 	int err = 0;
@@ -23,7 +23,7 @@ bool XFFmpeg::Open(const char *path)
 		mutex.unlock();
 		av_strerror(re, errorbuf, sizeof(errorbuf));
 		printf("open failed %s\n", path, errorbuf);		
-		return false;
+		return 0;
 	}
 	totalMs = (ic->duration / AV_TIME_BASE)*1000;
 
@@ -40,7 +40,7 @@ bool XFFmpeg::Open(const char *path)
 			{
 				mutex.unlock();
 				printf("video code not find!!\n");
-				return false;
+				return 0;
 			}
 
 			err = avcodec_open2(enc, codec,NULL);	//找到系统中这个解码器的话，就打开这个解码器。
@@ -50,14 +50,14 @@ bool XFFmpeg::Open(const char *path)
 				char buf[1024] = { 0 };
 				av_strerror(re, errorbuf, sizeof(errorbuf));
 				printf("buf\n", path, errorbuf);
-				return false;
+				return 0;
 			}
 			printf("open avcodec_open2 success!!!\n");
 		}
 	}
 
 	mutex.unlock();
-	return true;
+	return totalMs;
 }
 
 AVPacket XFFmpeg::Read()
@@ -135,8 +135,31 @@ AVFrame *XFFmpeg::Decode(const AVPacket *pkt)
 	}
 
 	mutex.unlock();
+	pts = yuv->pts*r2d(ic->streams[pkt->stream_index]->time_base)*1000;//得到当前画面的毫秒数
 	return yuv;
 }
+
+bool XFFmpeg::Seek(float pos)
+{
+	mutex.lock();
+	if (!ic)	//	判断是否打开
+	{
+		mutex.unlock();
+		return false;
+	}
+
+	int64_t stamp = 0;
+	stamp = pos *ic->streams[videoStream]->duration;//duration是视频的总长度，乘以pos得到进度条拖动位置对应的视频位置
+	int re = av_seek_frame(ic, videoStream, stamp, AVSEEK_FLAG_BACKWARD | AVSEEK_FLAG_FRAME);//向前查找并找到关键帧
+	avcodec_flush_buffers(ic->streams[videoStream]->codec);//清空缓冲区
+
+	mutex.unlock();
+	if (re >= 0)
+		return true;
+
+	return false;
+}
+
 bool XFFmpeg::ToRGB(char *out, int outwidth, int outheight)
 {
 	mutex.lock();

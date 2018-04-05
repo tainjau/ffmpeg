@@ -17,7 +17,7 @@
    <iconset resource="xplay.qrc">
     <normaloff>:/Xplay/logo.ico</normaloff>:/Xplay/logo.ico</iconset>
   </property>
-  <widget class="VideoWidget" name="openGLWidget">
+  <widget class="VideoWidget" name="videoWidget">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -31,7 +31,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>510</y>
+     <y>540</y>
      <width>41</width>
      <height>51</height>
     </rect>
@@ -47,10 +47,10 @@ QPushButton:hover{border-image: url(:/Xplay/open_hot.png);}</string>
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>610</x>
-     <y>560</y>
-     <width>31</width>
-     <height>31</height>
+     <x>360</x>
+     <y>540</y>
+     <width>51</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -59,6 +59,59 @@ QPushButton:hover{border-image: url(:/Xplay/play_hot.png);}</string>
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="totaltime">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>540</y>
+     <width>61</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);
+font: 12pt &quot;黑体&quot;;</string>
+   </property>
+   <property name="text">
+    <string>/000:00</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="playtime">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>540</y>
+     <width>51</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);
+font: 12pt &quot;黑体&quot;;</string>
+   </property>
+   <property name="text">
+    <string>000:00</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="playslider">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>520</y>
+     <width>761</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>999</number>
+   </property>
+   <property name="pageStep">
+    <number>100</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>
@@ -85,7 +138,7 @@ QPushButton:hover{border-image: url(:/Xplay/play_hot.png);}</string>
    <hints>
     <hint type="sourcelabel">
      <x>33</x>
-     <y>519</y>
+     <y>549</y>
     </hint>
     <hint type="destinationlabel">
      <x>894</x>
@@ -93,8 +146,42 @@ QPushButton:hover{border-image: url(:/Xplay/play_hot.png);}</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>playslider</sender>
+   <signal>sliderPressed()</signal>
+   <receiver>XplayClass</receiver>
+   <slot>sliderPressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>526</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>819</x>
+     <y>107</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playslider</sender>
+   <signal>sliderReleased()</signal>
+   <receiver>XplayClass</receiver>
+   <slot>sliderReleased()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>71</x>
+     <y>524</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>821</x>
+     <y>157</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>open()</slot>
+  <slot>sliderPressed()</slot>
+  <slot>sliderReleased()</slot>
  </slots>
 </ui>

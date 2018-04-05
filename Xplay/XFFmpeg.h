@@ -16,9 +16,9 @@ public:
 	////////////////////////////////////////////////////
 	///打开视频文件，如果上次已经打开就会先关闭
 	///@path path 视频文件路径
-	///@return bool 成功失败 失败信息通过GetError获取
+	///@return int return total ms
 	////////////////////////////////////////////////////
-	bool Open(const char *path);
+	int Open(const char *path);
 	void Close();
 	///返回值需要用户清理
 	AVPacket Read();
@@ -26,11 +26,16 @@ public:
 	AVFrame *Decode(const AVPacket *pkt);
 
 	bool ToRGB(char *out,int outwidth, int outheight);
+
+	//pos 0~1 
+	bool Seek(float pos);
+
 	std::string GetError();
 	virtual ~XFFmpeg();
 	
 	int totalMs = 0;	//时长
-	int fps = 0;
+	int fps = 0;		//帧率
+	int pts = 0;		//表示当前播放进度
 	int videoStream = 0;
 protected:
 	
