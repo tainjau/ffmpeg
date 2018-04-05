@@ -25,11 +25,12 @@ public:
 
 	AVFrame *Decode(const AVPacket *pkt);
 
-	bool ToRGB(const AVFrame *yuv,char *out,int outwidth, int outheight);
+	bool ToRGB(char *out,int outwidth, int outheight);
 	std::string GetError();
 	virtual ~XFFmpeg();
 	
 	int totalMs = 0;	//Ê±³¤
+	int fps = 0;
 	int videoStream = 0;
 protected:
 	

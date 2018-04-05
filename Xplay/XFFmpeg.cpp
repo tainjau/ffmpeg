@@ -3,6 +3,13 @@
 #pragma comment(lib,"avutil.lib")
 #pragma comment(lib,"avcodec.lib")
 #pragma comment(lib,"swscale.lib")
+
+//为了将pkt.pts转换成秒的函数。
+static double r2d(AVRational r)
+{
+	return r.num == 0 || r.den == 0 ? 0. : (double)r.num / (double)r.den;
+}
+
 bool XFFmpeg::Open(const char *path)
 {
 	int re = 0;
@@ -27,6 +34,7 @@ bool XFFmpeg::Open(const char *path)
 		if (enc->codec_type == AVMEDIA_TYPE_VIDEO)//表示为一个视频
 		{
 			videoStream = i;
+			fps = r2d(ic->streams[i]->avg_frame_rate);		//获取fps
 			AVCodec *codec = avcodec_find_decoder(enc->codec_id); //判断系统有没有这个解码器
 			if (!codec)
 			{
@@ -129,10 +137,10 @@ AVFrame *XFFmpeg::Decode(const AVPacket *pkt)
 	mutex.unlock();
 	return yuv;
 }
-bool XFFmpeg::ToRGB(const AVFrame *yuv, char *out, int outwidth, int outheight)
+bool XFFmpeg::ToRGB(char *out, int outwidth, int outheight)
 {
 	mutex.lock();
-	if (!ic)	//判断视频文件被打开没，没被打开的话，直接退出。
+	if (!ic || !yuv)	//判断视频文件被打开没，没被打开的话，直接退出。
 	{
 		mutex.unlock();
 		return false;	
